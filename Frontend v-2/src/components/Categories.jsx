@@ -1,36 +1,26 @@
-import React from "react";
-
-import { FaStar } from "react-icons/fa";
-
-const CategoriesData = [
-  {
-    id: 1,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Casual Wear",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 2,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Printed Shirt",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-  {
-    id: 3,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Women Shirt",
-    description:
-      "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-  },
-];
+import React, { useEffect, useState } from 'react';
+import axios from 'axios'; // Import Axios
+import { FaStar } from 'react-icons/fa';
 
 const Categories = () => {
+  const [categories, setCategories] = useState([]);
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await axios.get('http://localhost:8080/catgory/list');
+        setCategories(response.data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
+    fetchCategories();
+  }, []); 
+
   return (
     <div>
       <div className="container">
-        {/* Header section */}
         <div className="text-center mb-24">
           <p data-aos="fade-up" className="text-sm text-primary">
             Top Rated Categories for you
@@ -45,17 +35,17 @@ const Categories = () => {
         </div>
         {/* Body section */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-20 md:gap-5 place-items-center">
-          {CategoriesData.map((data) => (
+          {categories.map((category) => (
             <div
-              key={data.id} // Added key prop for better React performance
+              key={category.id}
               data-aos="zoom-in"
-              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group max-w-[300px]"
+              className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group w-[300px]"
             >
               {/* image section */}
               <div className="h-[100px]">
                 <img
-                  src={data.img}
-                  alt={data.title}
+                  src={category.imageUrl}
+                  alt={category.categoryName}
                   className="max-w-[140px] block mx-auto transform -translate-y-20 group-hover:scale-105 duration-300 drop-shadow-md"
                 />
               </div>
@@ -68,9 +58,9 @@ const Categories = () => {
                   <FaStar className="text-yellow-500" />
                   <FaStar className="text-yellow-500" />
                 </div>
-                <h1 className="text-xl font-bold">{data.title}</h1>
+                <h1 className="text-xl font-bold">{category.categoryName}</h1>
                 <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2">
-                  {data.description}
+                  {category.description}
                 </p>
                 <button
                   className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"

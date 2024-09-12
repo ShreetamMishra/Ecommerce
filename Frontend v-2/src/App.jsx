@@ -4,7 +4,8 @@ import Signup from './components/Signup';
 import Signin from './components/Signin';
 import Dashboard from './components/Dashboard';
 import Home from './Home';
-
+import ProductDetail from './components/ProductDetail';
+import ProductList from './components/ProductList';
 function App() {
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -19,7 +20,7 @@ function App() {
       setIsLoggedIn(true);
     }
   }, []);
-
+  console.log("get",userEmail);
   return (
     <Router>
       <Routes>
@@ -45,6 +46,8 @@ function App() {
             : <Signin setUserEmail={setUserEmail} setIsLoggedIn={setIsLoggedIn} />
           } 
         />
+         <Route path="/product-list" element={<ProductList />} />
+         <Route path="/product/:id" element={<ProductDetail />} />
       </Routes>
     </Router>
   );

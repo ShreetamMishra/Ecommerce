@@ -16,6 +16,8 @@ const Home = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
     });
     AOS.refresh();
   }, []);
+
+  console.log("get",userEmail)
   return (
     <div>
       {/* Pass props to Navbar */}

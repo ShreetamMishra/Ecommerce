@@ -1,51 +1,42 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa'; // Imported FaStar from react-icons
-
-
-const ProductsData = [
-  {
-    id: 1,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Women Ethnic",
-    rating: 5.0,
-    color: "white",
-    aosDelay: "0",
-  },
-  {
-    id: 2,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Women western",
-    rating: 4.5,
-    color: "Red",
-    aosDelay: "200",
-  },
-  {
-    id: 3,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Goggles",
-    rating: 4.7,
-    color: "brown",
-    aosDelay: "400",
-  },
-  {
-    id: 4,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Printed T-Shirt",
-    rating: 4.4,
-    color: "Yellow",
-    aosDelay: "600",
-  },
-  {
-    id: 5,
-    img: "https://encrypted-tbn1.gstatic.com/shopping?q=tbn:ANd9GcRDn3F27jmXAsgZj6exb_Ol-DPTz431kzEx8ocx5HF1QQc8-aEuYArP2I63BMOUIRyQSxBsVYHdVMETQj4KKFw-Zic82TRYJRl91jp52z2yqaoYdmfUekvt",
-    title: "Fashion T-Shirt",
-    rating: 4.5,
-    color: "Pink",
-    aosDelay: "800",
-  },
-];
+import { useNavigate } from 'react-router-dom'; // Import useNavigate from react-router-dom
 
 const TopProducts = () => {
+  const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate hook
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/product/');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        // Transform API data to match the component's expected format
+        const transformedData = data.map(product => ({
+          id: product.id,
+          img: product.imageURL,
+          title: product.name,
+          price:product.price,
+          rating: 0, // Set default rating or adjust based on API if available
+          color: '', // Set default color or adjust based on API if available
+          aosDelay: '0' // Set a default value or adjust dynamically if needed
+        }));
+        setProducts(transformedData);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+      }
+    };
+
+    fetchProducts();
+  }, []);
+
+  const handleViewAll = () => {
+    navigate('/product-list'); // Navigate to ProductList page
+  };
+
   return (
     <div className="mt-14 mb-12">
       <div className="container mx-auto">
@@ -63,33 +54,40 @@ const TopProducts = () => {
         <div>
           <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center gap-5">
             {/* Card section */}
-            {ProductsData.map((data) => (
+            {products.slice(0, 5).map(product => (
               <div
                 data-aos="fade-up"
-                data-aos-delay={data.aosDelay}
-                key={data.id}
+                data-aos-delay="0" // You might want to adjust the delay dynamically if needed
+                key={product.id}
                 className="space-y-3 text-center"
               >
                 <img
-                  src={data.img}
-                  alt={data.title}
+                  src={product.img}
+                  alt={product.title}
                   className="h-[220px] w-[150px] object-cover rounded-md"
                 />
                 <div>
-                  <h3 className="font-semibold">{data.title}</h3>
-                  <p className="text-sm text-gray-600">{data.color}</p>
+                  <h3 className="font-semibold">{product.title}</h3>
+                  <h3 className="font-semibold">₹{product.price}</h3>
+                  {/* <p className="text-sm text-gray-600">{product.color || 'No color info'}</p> */}
                   <div className="flex justify-center items-center gap-1">
                     <FaStar className="text-yellow-400" />
-                    <span>{data.rating}</span>
+                    <FaStar className="text-yellow-400" />
+                    <FaStar className="text-yellow-400" />
+                    <FaStar className="text-yellow-400" />
+                    {/* <span>{4 || 'No rating info'}</span> */}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-           {/* view all button */}
+           {/* View all button */}
            <div className="flex justify-center">
-            <button className="text-center mt-10 cursor-pointer bg-primary text-white py-1 px-5 rounded-md">
-              View All Button
+            <button
+              onClick={handleViewAll} // Add click handler for navigation
+              className="text-center mt-10 cursor-pointer bg-primary text-white py-1 px-5 rounded-md"
+            >
+              View All
             </button>
           </div>
         </div>

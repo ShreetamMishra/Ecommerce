@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import logooo from "../assets/logooo.png";
 import { IoMdSearch } from "react-icons/io";
@@ -13,9 +13,17 @@ const Menu = [
   { id: 5, name: "Electronics", link: "/#" },
 ];
 
-const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
+const Navbar = ({  isLoggedIn, setIsLoggedIn }) => {
   const navigate = useNavigate();
-
+  const [userEmail, setUserEmail] = useState('');
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('userEmail');
+    
+    if (token && email) {
+      setUserEmail(email);
+    }
+  }, []);
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
@@ -33,9 +41,9 @@ const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
   };
 
   const goToDashboard = () => {
-    navigate("/dashboard");
+    navigate("/product-list");
   };
-
+console.log("helo",userEmail)
   return (
     <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
       {/* Upper Navbar */}
@@ -86,11 +94,18 @@ const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
 
           {/* Dashboard link, only for admin */}
           {isLoggedIn && userEmail === "admin@example.com" && (
+            <>
             <li>
               <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
                 Dashboard
               </button>
             </li>
+            <li>
+              <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
+                Dashboard
+              </button>
+            </li>
+           </>
           )}
 
           {/* Login/Signup/Logout */}
