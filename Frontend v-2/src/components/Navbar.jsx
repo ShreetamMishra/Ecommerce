@@ -17,6 +17,7 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
   useEffect(() => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('userEmail');
@@ -26,6 +27,7 @@ const Navbar = () => {
       setIsLoggedIn(true);
     }
   }, []);
+
   const handleLogout = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('userEmail');
@@ -45,7 +47,11 @@ const Navbar = () => {
   const goToDashboard = () => {
     navigate("/product-list");
   };
-console.log("helo",userEmail)
+
+  const goToCategory = () => {
+    navigate("/category-list");
+  };
+
   return (
     <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
       {/* Upper Navbar */}
@@ -85,51 +91,61 @@ console.log("helo",userEmail)
       {/* Lower Navbar */}
       <div className="flex justify-center">
         <ul className="sm:flex hidden items-center gap-4">
-          {/* Menu rendering */}
-          {Menu.map((data) => (
-            <li key={data.id}>
-              <a href={data.link} className="inline-block px-4 hover:text-primary duration-200">
-                {data.name}
-              </a>
-            </li>
-          ))}
-
-          {/* Dashboard link, only for admin */}
-          {isLoggedIn && userEmail === "admin@example.com" && (
-            <>
-            <li>
-              <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
-                Dashboard
-              </button>
-            </li>
-            <li>
-              <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
-                Dashboard
-              </button>
-            </li>
-           </>
-          )}
-
-          {/* Login/Signup/Logout */}
-          {!isLoggedIn ? (
+          {/* Admin specific menu */}
+          {isLoggedIn && userEmail === "admin@example.com" ? (
             <>
               <li>
-                <button onClick={handleSignin} className="px-4 py-2 hover:text-primary duration-200">
-                  Signin
+                <a href="/#" className="inline-block px-4 hover:text-primary duration-200">
+                  Home
+                </a>
+              </li>
+              <li>
+                <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
+                  Products
                 </button>
               </li>
               <li>
-                <button onClick={handleSignup} className="inline-block px-4 hover:text-primary duration-200">
-                  Signup
+                <button onClick={goToCategory} className="inline-block px-4 hover:text-primary duration-200">
+                  Categories
+                </button>
+              </li>
+              <li>
+                <button onClick={handleLogout} className="px-4 py-2 hover:text-primary duration-200">
+                  Signout
                 </button>
               </li>
             </>
           ) : (
-            <li>
-              <button onClick={handleLogout} className="px-4 py-2 hover:text-primary duration-200">
-                Signout
-              </button>
-            </li>
+            // Normal user menu
+            <>
+              {Menu.map((data) => (
+                <li key={data.id}>
+                  <a href={data.link} className="inline-block px-4 hover:text-primary duration-200">
+                    {data.name}
+                  </a>
+                </li>
+              ))}
+              {!isLoggedIn ? (
+                <>
+                  <li>
+                    <button onClick={handleSignin} className="px-4 py-2 hover:text-primary duration-200">
+                      Signin
+                    </button>
+                  </li>
+                  <li>
+                    <button onClick={handleSignup} className="inline-block px-4 hover:text-primary duration-200">
+                      Signup
+                    </button>
+                  </li>
+                </>
+              ) : (
+                <li>
+                  <button onClick={handleLogout} className="px-4 py-2 hover:text-primary duration-200">
+                    Signout
+                  </button>
+                </li>
+              )}
+            </>
           )}
         </ul>
       </div>

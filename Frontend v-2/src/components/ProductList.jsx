@@ -1,11 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { FaStar } from 'react-icons/fa'; 
-import { Link } from 'react-router-dom'; // Import Link for navigation
+import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [userEmail, setUserEmail] = useState('');
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    category: '',
+    name: '',
+    description: '',
+    imageUrl: '',
+    price: '',
+  });
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -21,8 +30,6 @@ const ProductList = () => {
           title: product.name,
           rating: 0, 
           price: product.price,
-          color: '', 
-          aosDelay: '0' 
         }));
         setProducts(transformedData);
       } catch (error) {
@@ -30,8 +37,33 @@ const ProductList = () => {
       }
     };
 
+    const email = localStorage.getItem('userEmail');
+    setUserEmail(email);
+
     fetchProducts();
   }, []);
+
+  const handleAddProductClick = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleInputChange = (e) => {
+    setNewProduct({
+      ...newProduct,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    // Handle product submission (e.g., POST to API)
+    console.log('New Product:', newProduct);
+    setIsModalOpen(false);
+  };
 
   return (
     <>
@@ -39,16 +71,25 @@ const ProductList = () => {
       <div className="mt-14 mb-12">
         <div className="container mx-auto">
           {/* Header */}
-          <div className="text-center mb-10 max-w-[600px] mx-auto">
-            <h1 className="text-3xl font-bold">All Products</h1>
-            <p className="text-xs text-gray-400">
-              Browse all available products.
-            </p>
+          <div className="relative flex justify-center items-center mb-10">
+            <div className="text-center">
+              <h1 className="text-3xl font-bold">All Products</h1>
+              <p className="text-xs text-gray-400">
+                Browse all available products.
+              </p>
+            </div>
+            {userEmail === 'admin@example.com' && (
+              <button
+                onClick={handleAddProductClick}
+                className="absolute right-0 bg-gradient-to-r from-primary to-secondary text-white py-2 px-4 rounded-full"
+              >
+                Add Products
+              </button>
+            )}
           </div>
-          {/* Body */}
+          {/* Product Grid */}
           <div>
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center gap-5">
-              {/* Card section */}
               {products.map(product => (
                 <Link to={`/product/${product.id}`} key={product.id} className="space-y-3 text-center">
                   <img
@@ -64,7 +105,6 @@ const ProductList = () => {
                       <FaStar className="text-yellow-400" />
                       <FaStar className="text-yellow-400" />
                       <FaStar className="text-yellow-400" />
-                      {/* <span>{4 || 'No rating info'}</span> */}
                     </div>
                   </div>
                 </Link>
@@ -73,9 +113,89 @@ const ProductList = () => {
           </div>
         </div>
       </div>
+
       <Footer />
+
+      {/* Modal for Adding New Product */}
+      {isModalOpen && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+          <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[500px] shadow-lg">
+            <div className="flex justify-between items-center mb-4">
+              <h2 className="text-2xl font-bold text-center w-full">Add New Product</h2>
+              <button onClick={handleCloseModal} className="text-gray-400 hover:text-black ">X</button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="space-y-4 px-4">
+              <div>
+                <label className="block font-semibold">Category</label>
+                <input
+                  type="text"
+                  name="category"
+                  value={newProduct.category}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-semibold">Name</label>
+                <input
+                  type="text"
+                  name="name"
+                  value={newProduct.name}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-semibold">Description</label>
+                <input
+                  type="text"
+                  name="description"
+                  value={newProduct.description}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-semibold">Image URL</label>
+                <input
+                  type="text"
+                  name="imageUrl"
+                  value={newProduct.imageUrl}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block font-semibold">Price</label>
+                <input
+                  type="number"
+                  name="price"
+                  value={newProduct.price}
+                  onChange={handleInputChange}
+                  className="w-full border border-gray-300 rounded-md p-2"
+                  required
+                />
+              </div>
+
+              <div className="text-right">
+                <button
+                  type="submit"
+                  className="bg-gradient-to-r from-primary to-secondary text-white py-2 px-4 rounded-full"
+                >
+                  Submit
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </>
   );
-}
+};
 
 export default ProductList;
