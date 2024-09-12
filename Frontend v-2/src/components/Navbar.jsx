@@ -13,15 +13,17 @@ const Menu = [
   { id: 5, name: "Electronics", link: "/#" },
 ];
 
-const Navbar = ({  isLoggedIn, setIsLoggedIn }) => {
+const Navbar = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   useEffect(() => {
     const token = localStorage.getItem('token');
     const email = localStorage.getItem('userEmail');
     
     if (token && email) {
       setUserEmail(email);
+      setIsLoggedIn(true);
     }
   }, []);
   const handleLogout = () => {
