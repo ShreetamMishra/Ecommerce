@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Signup from './components/Signup';
 import Signin from './components/Signin';
 import Dashboard from './components/Dashboard';
-import Home from './Home'; // Import Home
+import Home from './Home';
 
 function App() {
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  // Check localStorage for token and email on component mount
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const email = localStorage.getItem('userEmail');
+    
+    if (token && email) {
+      setUserEmail(email);
+      setIsLoggedIn(true);
+    }
+  }, []);
 
   return (
     <Router>
@@ -29,7 +40,7 @@ function App() {
         />
         <Route 
           path="/dashboard" 
-          element={isLoggedIn && userEmail === "admin@gmail.com" 
+          element={isLoggedIn && userEmail === "admin@example.com" 
             ? <Dashboard /> 
             : <Signin setUserEmail={setUserEmail} setIsLoggedIn={setIsLoggedIn} />
           } 

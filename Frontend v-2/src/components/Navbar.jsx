@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import logooo from "../assets/logooo.png";
 import { IoMdSearch } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
-import { MdArrowDropDown } from "react-icons/md";
 import DarkMode from './DarkMode';
 
 const Menu = [
@@ -14,17 +13,15 @@ const Menu = [
   { id: 5, name: "Electronics", link: "/#" },
 ];
 
-const DropdownLinks = [
-  { id: 1, name: "Trending Products", link: "/#" },
-  { id: 2, name: "Best Selling", link: "/#" },
-  { id: 3, name: "Top Rated", link: "/#" },
-];
 const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
   const handleLogout = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('userEmail');
     setIsLoggedIn(false);
     setUserEmail('');
+    navigate('/'); // Redirect to home after logout
   };
 
   const handleSignin = () => {
@@ -61,23 +58,19 @@ const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
               />
               <IoMdSearch className='text-gray-500 group-hover:text-primary absolute top-1/2 transform -translate-y-1/2 right-3' />
             </div>
-            {/* order button */}
+            {/* Order button */}
             <button
               onClick={() => alert("Order feature is not yet available")}
               className='bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white py-1 px-4 rounded-full flex items-center gap-3 group'
             >
-              <span
-                className='group-hover:block hidden transition-all duration-200'
-              >Order</span>
+              <span className='group-hover:block hidden transition-all duration-200'>Order</span>
               <FaShoppingCart className='text-xl text-white drop-shadow-sm cursor-pointer' />
             </button>
-            {/* Drakmode */}
+            {/* Darkmode */}
             <DarkMode />
           </div>
         </div>
       </div>
-        {/* </div> */}
-      {/* // </div> */}
 
       {/* Lower Navbar */}
       <div className="flex justify-center">
@@ -91,9 +84,8 @@ const Navbar = ({ userEmail, isLoggedIn, setUserEmail, setIsLoggedIn }) => {
             </li>
           ))}
 
-          {/* Dropdown */}
-          {/* Dashboard link */}
-          {isLoggedIn && userEmail === "admin@gmail.com" && (
+          {/* Dashboard link, only for admin */}
+          {isLoggedIn && userEmail === "admin@example.com" && (
             <li>
               <button onClick={goToDashboard} className="inline-block px-4 hover:text-primary duration-200">
                 Dashboard
