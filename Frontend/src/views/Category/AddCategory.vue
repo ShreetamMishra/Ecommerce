@@ -50,7 +50,7 @@ export default {
 
       await axios({
         method: 'post',
-        url: this.baseURL+"category/create",
+        url: this.baseURL+"catgory/create",
         data : JSON.stringify(newCategory),
         headers: {
           'Content-Type': 'application/json'

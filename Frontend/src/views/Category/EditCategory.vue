@@ -41,7 +41,7 @@ export default {
   methods : {
     async editCategory() {
       delete this.category["products"]
-      await axios.post(this.baseURL+"category/update/"+this.id, this.category)
+      await axios.post(this.baseURL+"catgory/update/"+this.id, this.category)
       .then(res => {
           //sending the event to parent to handle
         this.$emit("fetchData");

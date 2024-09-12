@@ -44,7 +44,7 @@ export default {
 
       //fetch categories
       await axios
-        .get(this.baseURL + 'category/')
+        .get(this.baseURL + 'catgory/list')
         .then((res) => (this.categories = res.data))
         .catch((err) => console.log(err));
 
