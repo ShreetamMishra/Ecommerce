@@ -4,7 +4,7 @@ import Logo from "../assets/logooo.png";
 
 const Footer = () => {
   return (
-    <footer className="bg-gray-900 text-white py-10 mt-16">
+    <footer className="bg-gray-900 text-white py-10 mt-16 ">
       <div className="container mx-auto grid grid-cols-1 sm:grid-cols-4 gap-8">
         {/* Left section: Logo and Company Details */}
         <div className="space-y-3 sm:space-y-3 sm:items-start sm:text-left text-center flex flex-col items-center">

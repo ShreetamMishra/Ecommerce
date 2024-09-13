@@ -19,7 +19,7 @@ const TopProducts = () => {
           id: product.id,
           img: product.imageURL,
           title: product.name,
-          price:product.price,
+          price: product.price,
           rating: 0, // Set default rating or adjust based on API if available
           color: '', // Set default color or adjust based on API if available
           aosDelay: '0' // Set a default value or adjust dynamically if needed
@@ -37,14 +37,17 @@ const TopProducts = () => {
     navigate('/product-list'); // Navigate to ProductList page
   };
 
+  // Handle navigation to product details
+  const handleProductClick = (productId) => {
+    navigate(`/product/${productId}`);
+  };
+
   return (
     <div className="mt-14 mb-12">
       <div className="container mx-auto">
         {/* Header */}
         <div className="text-center mb-10 max-w-[600px] mx-auto">
-          <p className="text-sm text-primary">
-            Top Selling Products for you
-          </p>
+          <p className="text-sm text-primary">Top Selling Products for you</p>
           <h1 className="text-3xl font-bold">Products</h1>
           <p className="text-xs text-gray-400">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Eius, explicabo?
@@ -59,7 +62,8 @@ const TopProducts = () => {
                 data-aos="fade-up"
                 data-aos-delay="0" // You might want to adjust the delay dynamically if needed
                 key={product.id}
-                className="space-y-3 text-center"
+                className="space-y-3 text-center cursor-pointer" // Add cursor pointer to indicate clickable items
+                onClick={() => handleProductClick(product.id)} // Add click handler
               >
                 <img
                   src={product.img}
@@ -69,20 +73,19 @@ const TopProducts = () => {
                 <div>
                   <h3 className="font-semibold">{product.title}</h3>
                   <h3 className="font-semibold">₹{product.price}</h3>
-                  {/* <p className="text-sm text-gray-600">{product.color || 'No color info'}</p> */}
                   <div className="flex justify-center items-center gap-1">
                     <FaStar className="text-yellow-400" />
                     <FaStar className="text-yellow-400" />
                     <FaStar className="text-yellow-400" />
                     <FaStar className="text-yellow-400" />
-                    {/* <span>{4 || 'No rating info'}</span> */}
+                    {/* Add more dynamic rating logic if needed */}
                   </div>
                 </div>
               </div>
             ))}
           </div>
-           {/* View all button */}
-           <div className="flex justify-center">
+          {/* View all button */}
+          <div className="flex justify-center">
             <button
               onClick={handleViewAll} // Add click handler for navigation
               className="text-center mt-10 cursor-pointer bg-primary text-white py-1 px-5 rounded-md"
@@ -94,6 +97,6 @@ const TopProducts = () => {
       </div>
     </div>
   );
-}
+};
 
 export default TopProducts;

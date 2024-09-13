@@ -26,26 +26,30 @@ const CartPage = () => {
     fetchCartItems();
   }, [token]);
 
-  const handleRemoveItem = async (id) => {
+  const handleRemoveItems = async () => {
     try {
-      await axios.delete(`http://localhost:8080/cart/delete/${id}?token=${token}`);
-      setCartItems(cartItems.filter(item => item.id !== id));
-      const updatedTotalCost = cartItems
-        .filter(item => item.id !== id)
-        .reduce((acc, item) => acc + item.product.price * item.quantity, 0);
-      setTotalCost(updatedTotalCost);
+      // Remove each item from the cart
+      for (const item of cartItems) {
+        await axios.delete(`http://localhost:8080/cart/delete/${item.id}?token=${token}`);
+      }
+      // After removing all items, clear the cart and redirect to home
+      setCartItems([]);
+      setTotalCost(0);
+      navigate('/');
     } catch (err) {
-      console.error('Error removing item:', err);
+      console.error('Error removing items:', err);
     }
   };
 
   const handlePayment = () => {
+    // Show the popup, but don't remove items yet
     setShowPopup(true);
   };
 
-  const handleClosePopup = () => {
+  const handleClosePopup = async () => {
+    // After confirming payment, remove items from the cart
+    await handleRemoveItems();
     setShowPopup(false);
-    navigate('/'); // Redirect to home or other page
   };
 
   return (

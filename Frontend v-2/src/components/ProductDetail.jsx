@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import Navbar from './Navbar';
 import Footer from './Footer';
@@ -10,12 +10,11 @@ const ProductDetail = () => {
   const [product, setProduct] = useState(null);
   const [category, setCategory] = useState(null);
   const [quantity, setQuantity] = useState(1);
-  const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
-  const [wishlistString, setWishlistString] = useState("Add to Wishlist");
+  // const [isAddedToWishlist, setIsAddedToWishlist] = useState(false);
+  // const [wishlistString, setWishlistString] = useState("Add to Wishlist");
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchProductDetails = async () => {
@@ -40,20 +39,20 @@ const ProductDetail = () => {
     fetchProductDetails();
   }, [id]);
 
-  const handleAddToWishlist = async () => {
-    try {
-      const response = await axios.post(`http://localhost:8080/wishlist/add`, {
-        id: product.id,
-        token
-      });
-      if (response.status === 201) {
-        setIsAddedToWishlist(true);
-        setWishlistString("Added to Wishlist");
-      }
-    } catch (err) {
-      console.error('Error adding to wishlist:', err);
-    }
-  };
+  // const handleAddToWishlist = async () => {
+  //   try {
+  //     const response = await axios.post(`http://localhost:8080/wishlist/add`, {
+  //       id: product.id,
+  //       token
+  //     });
+  //     if (response.status === 201) {
+  //       setIsAddedToWishlist(true);
+  //       setWishlistString("Added to Wishlist");
+  //     }
+  //   } catch (err) {
+  //     console.error('Error adding to wishlist:', err);
+  //   }
+  // };
 
   const handleAddToCart = async () => {
     if (!token) {
@@ -71,10 +70,6 @@ const ProductDetail = () => {
     } catch (err) {
       console.error('Error adding to cart:', err);
     }
-  };
-
-  const handleShowCart = () => {
-    navigate('/cart');
   };
 
   if (loading) return <p>Loading...</p>;
@@ -127,18 +122,12 @@ const ProductDetail = () => {
               </div>
 
               <div className="flex gap-4">
-                <button
+                {/* <button
                   className={`btn ${isAddedToWishlist ? 'bg-gray-500' : 'bg-gray-300'} text-white px-4 py-2 rounded-md shadow-md transition`}
                   onClick={handleAddToWishlist}
                 >
                   {wishlistString}
-                </button>
-                <button
-                  className="btn bg-gray-800 text-white px-4 py-2 rounded-md shadow-md hover:bg-gray-900 transition"
-                  onClick={handleShowCart}
-                >
-                  Show Cart
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

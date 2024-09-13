@@ -4,6 +4,7 @@ import logooo from "../assets/logooo.png";
 import { IoMdSearch } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
 import DarkMode from './DarkMode';
+import axios from 'axios';
 
 const Menu = [
   { id: 1, name: "Home", link: "/" },
@@ -17,16 +18,33 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [cartItems, setCartItems] = useState([]);
+  const [token, setToken] = useState(localStorage.getItem('token'));
+  // const [cartItemCount, setCartItemCount] = useState(0);
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
+  
     const email = localStorage.getItem('userEmail');
-    
+
     if (token && email) {
       setUserEmail(email);
       setIsLoggedIn(true);
     }
-  }, []);
+
+    // Fetch cart item count
+    const fetchCartItems = async () => {
+      try {
+        const response = await axios.get(`http://localhost:8080/cart/?token=${token}`);
+        const { cartItems } = response.data;
+        console.log("Cart items number", cartItems)
+        setCartItems(cartItems);
+      } catch (err) {
+        console.error('Error fetching cart items:', err);
+      }
+    };
+
+    fetchCartItems();
+  }, [token]);
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -52,13 +70,17 @@ const Navbar = () => {
     navigate("/category-list");
   };
 
+  const goToCart = () => {
+    navigate("/cart");
+  };
+
   return (
     <div className="shadow-md bg-white dark:bg-gray-900 dark:text-white duration-200 relative z-40">
       {/* Upper Navbar */}
       <div className="bg-primary/40 py-2">
         <div className="container flex justify-between items-center">
           <div>
-            <a href="#" className="font-bold text-2xl sm:text-3xl flex gap-2">
+            <a onClick={() => navigate("/")} className="font-bold text-2xl sm:text-3xl flex gap-2 cursor-pointer">
               <img src={logooo} alt="Logo" className="w-10" />
               e-shop
             </a>
@@ -74,14 +96,21 @@ const Navbar = () => {
               />
               <IoMdSearch className='text-gray-500 group-hover:text-primary absolute top-1/2 transform -translate-y-1/2 right-3' />
             </div>
-            {/* Order button */}
+
+            {/* Cart Button */}
             <button
-              onClick={() => alert("Order feature is not yet available")}
-              className='bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white py-1 px-4 rounded-full flex items-center gap-3 group'
+              onClick={goToCart}
+              className='bg-gradient-to-r from-primary to-secondary transition-all duration-200 text-white py-1 px-4 rounded-full flex items-center gap-3 relative'
             >
-              <span className='group-hover:block hidden transition-all duration-200'>Order</span>
               <FaShoppingCart className='text-xl text-white drop-shadow-sm cursor-pointer' />
+              {cartItems.length > 0 && (
+                <span className="absolute top-0 right-0 transform translate-x-2 -translate-y-2 bg-gray-800 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
+                  {cartItems.length}
+                </span>
+              )}
             </button>
+
+
             {/* Darkmode */}
             <DarkMode />
           </div>

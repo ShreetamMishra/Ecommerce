@@ -132,20 +132,20 @@ const Categories = () => {
                     {category.description}
                   </p>
                   <Link to={`/category/${category.id}`}>
-  <button className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary">
-    View Products
-  </button>
-</Link>
-              
+                    <button className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary">
+                      View Products
+                    </button>
+                  </Link>
+
                 </div>
                 <div className='flex justify-center mb-2'>
-                <button
+                  <button
                     onClick={() => handleEditCategoryClick(category)} // Open edit modal on click
                     className="ml-2 bg-blue-500 hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-blue-500"
                   >
                     Edit
                   </button>
-                  </div>
+                </div>
               </div>
             ))}
           </div>
