@@ -8,14 +8,14 @@ const ImageList = [
   {
     id: 1,
     img: Image1,
-    title: "Upto 50% off on all Men's Wear",
+    title: "Upto 50% off on all Women's Wear",
     description:
       "lorem His Life will forever be Changed dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
   {
     id: 2,
     img: Image2,
-    title: "30% off on all Women's Wear",
+    title: "30% off on all Men's Wear",
     description:
       "Who's there lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
@@ -55,7 +55,7 @@ const Hero = ({ handleOrderPopup }) => {
                 {/* text content section */}
                 <div className="flex flex-col justify-center gap-4 pt-12 sm:pt-0 text-center sm:text-left order-2 sm:order-1 relative z-10">
                   <h1
-                    className="text-5xl sm:text-6xl lg:text-7xl font-bold"
+                    className="text-7xl sm:text-6xl lg:text-7xl font-bold"
                   >
                     {data.title}
                   </h1>

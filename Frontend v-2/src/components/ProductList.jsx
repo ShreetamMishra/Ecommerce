@@ -139,7 +139,7 @@ const ProductList = () => {
 
   return (
     <>
-      <Navbar />
+      <Navbar products={products}/>
       <div className="mt-14 mb-12">
         <div className="container mx-auto">
           {/* Header */}

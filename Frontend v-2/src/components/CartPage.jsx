@@ -6,7 +6,7 @@ import Footer from './Footer';
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token] = useState(localStorage.getItem('token'));
   const [totalCost, setTotalCost] = useState(0);
   const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
