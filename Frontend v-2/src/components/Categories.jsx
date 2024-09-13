@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios'; // Import Axios
 import { FaStar } from 'react-icons/fa';
-
+import { Link } from 'react-router-dom';
 const Categories = () => {
   const [categories, setCategories] = useState([]);
 
@@ -62,16 +62,22 @@ const Categories = () => {
                 <p className="text-gray-500 group-hover:text-white duration-300 text-sm line-clamp-2">
                   {category.description}
                 </p>
-                <button
-                  className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary"
-                  // onClick={handleOrderPopup}
-                >
-                  Order Now
-                </button>
+                <Link to={`/category/${category.id}`}>
+  <button className="bg-primary hover:scale-105 duration-300 text-white py-1 px-4 rounded-full mt-4 group-hover:bg-white group-hover:text-primary">
+    View Products
+  </button>
+</Link>
               </div>
             </div>
           ))}
         </div>
+        <div className="flex justify-center">
+            <button
+              className="text-center mt-10 cursor-pointer bg-primary text-white py-1 px-5 rounded-md"
+            >
+              View All
+            </button>
+          </div>
       </div>
     </div>
   );

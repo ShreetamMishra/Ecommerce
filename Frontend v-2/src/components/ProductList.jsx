@@ -1,35 +1,39 @@
 import React, { useState, useEffect } from 'react';
-import { FaStar } from 'react-icons/fa'; 
+import { FaStar } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 
 const ProductList = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
   const [userEmail, setUserEmail] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [selectedProduct, setSelectedProduct] = useState(null);
   const [newProduct, setNewProduct] = useState({
-    category: '',
+    categoryId: '',
     name: '',
     description: '',
-    imageUrl: '',
+    imageURL: '',
     price: '',
   });
 
+  // Fetch products and categories on component load
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch('http://localhost:8080/product/');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
+        if (!response.ok) throw new Error('Network response was not ok');
         const data = await response.json();
         const transformedData = data.map(product => ({
           id: product.id,
           img: product.imageURL,
           title: product.name,
-          rating: 0, 
+          rating: 0,
           price: product.price,
+          categoryId: product.categoryId,
+          description: product.description,
         }));
         setProducts(transformedData);
       } catch (error) {
@@ -37,18 +41,39 @@ const ProductList = () => {
       }
     };
 
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch('http://localhost:8080/catgory/list');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        setCategories(data);
+      } catch (error) {
+        console.error('Error fetching categories:', error);
+      }
+    };
+
     const email = localStorage.getItem('userEmail');
     setUserEmail(email);
 
     fetchProducts();
+    fetchCategories();
   }, []);
 
   const handleAddProductClick = () => {
     setIsModalOpen(true);
+    setIsEditMode(false);
+    setNewProduct({
+      categoryId: '',
+      name: '',
+      description: '',
+      imageURL: '',
+      price: '',
+    });
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
+    setSelectedProduct(null);
   };
 
   const handleInputChange = (e) => {
@@ -58,11 +83,58 @@ const ProductList = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Handle product submission (e.g., POST to API)
-    console.log('New Product:', newProduct);
-    setIsModalOpen(false);
+    const apiUrl = isEditMode
+      ? `http://localhost:8080/product/update/${selectedProduct.id}`
+      : 'http://localhost:8080/product/add';
+    const method ='POST';
+
+    try {
+      const response = await fetch(apiUrl, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newProduct),
+      });
+
+      if (response.ok) {
+        console.log('Product successfully added/edited');
+        setIsModalOpen(false);
+        const response = await fetch('http://localhost:8080/product/');
+        if (!response.ok) throw new Error('Network response was not ok');
+        const data = await response.json();
+        const transformedData = data.map(product => ({
+          id: product.id,
+          img: product.imageURL,
+          title: product.name,
+          rating: 0,
+          price: product.price,
+          categoryId: product.categoryId,
+          description: product.description,
+        }));
+        setProducts(transformedData);
+        // Optionally, refetch products or update state
+      } else {
+        throw new Error('Failed to add/edit product');
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleEditProductClick = (product) => {
+    setSelectedProduct(product);
+    setIsModalOpen(true);
+    setIsEditMode(true);
+    setNewProduct({
+      categoryId: product.categoryId,
+      name: product.title,
+      description: product.description,
+      imageURL: product.img,
+      price: product.price,
+    });
   };
 
   return (
@@ -91,23 +163,33 @@ const ProductList = () => {
           <div>
             <div className="grid grid-cols-1 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 place-items-center gap-5">
               {products.map(product => (
-                <Link to={`/product/${product.id}`} key={product.id} className="space-y-3 text-center">
-                  <img
-                    src={product.img}
-                    alt={product.title}
-                    className="h-[220px] w-[150px] object-cover rounded-md"
-                  />
-                  <div>
-                    <h3 className="font-semibold">{product.title}</h3>
-                    <h3 className="font-semibold">₹{product.price}</h3>
-                    <div className="flex justify-center items-center gap-1">
-                      <FaStar className="text-yellow-400" />
-                      <FaStar className="text-yellow-400" />
-                      <FaStar className="text-yellow-400" />
-                      <FaStar className="text-yellow-400" />
+                <div key={product.id} className="space-y-3 text-center">
+                  <Link to={`/product/${product.id}`}>
+                    <img
+                      src={product.img}
+                      alt={product.title}
+                      className="h-[220px] w-[150px] object-cover rounded-md"
+                    />
+                    <div>
+                      <h3 className="font-semibold">{product.title}</h3>
+                      <h3 className="font-semibold">₹{product.price}</h3>
+                      <div className="flex justify-center items-center gap-1">
+                        <FaStar className="text-yellow-400" />
+                        <FaStar className="text-yellow-400" />
+                        <FaStar className="text-yellow-400" />
+                        <FaStar className="text-yellow-400" />
+                      </div>
                     </div>
-                  </div>
-                </Link>
+                  </Link>
+                  {userEmail === 'admin@example.com' && (
+                    <button
+                      onClick={() => handleEditProductClick(product)}
+                      className="bg-blue-500 text-white py-1 px-3 rounded-full"
+                    >
+                      Edit
+                    </button>
+                  )}
+                </div>
               ))}
             </div>
           </div>
@@ -116,26 +198,39 @@ const ProductList = () => {
 
       <Footer />
 
-      {/* Modal for Adding New Product */}
+      {/* Modal for Adding/Editing Product */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
           <div className="bg-white rounded-lg p-6 w-[90%] sm:w-[500px] shadow-lg">
             <div className="flex justify-between items-center mb-4">
-              <h2 className="text-2xl font-bold text-center w-full">Add New Product</h2>
-              <button onClick={handleCloseModal} className="text-gray-400 hover:text-black ">X</button>
+              <h2 className="text-2xl font-bold text-center w-full">
+                {isEditMode ? 'Edit Product' : 'Add New Product'}
+              </h2>
+              <button
+                onClick={handleCloseModal}
+                className="text-gray-400 hover:text-black "
+              >
+                X
+              </button>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4 px-4">
               <div>
                 <label className="block font-semibold">Category</label>
-                <input
-                  type="text"
-                  name="category"
-                  value={newProduct.category}
+                <select
+                  name="categoryId"
+                  value={newProduct.categoryId}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                   required
-                />
+                >
+                  <option value="">Select a Category</option>
+                  {categories.map((category) => (
+                    <option key={category.id} value={category.id}>
+                      {category.categoryName}
+                    </option>
+                  ))}
+                </select>
               </div>
               <div>
                 <label className="block font-semibold">Name</label>
@@ -163,8 +258,8 @@ const ProductList = () => {
                 <label className="block font-semibold">Image URL</label>
                 <input
                   type="text"
-                  name="imageUrl"
-                  value={newProduct.imageUrl}
+                  name="imageURL"
+                  value={newProduct.imageURL}
                   onChange={handleInputChange}
                   className="w-full border border-gray-300 rounded-md p-2"
                   required
@@ -187,7 +282,7 @@ const ProductList = () => {
                   type="submit"
                   className="bg-gradient-to-r from-primary to-secondary text-white py-2 px-4 rounded-full"
                 >
-                  Submit
+                  {isEditMode ? 'Update' : 'Submit'}
                 </button>
               </div>
             </form>

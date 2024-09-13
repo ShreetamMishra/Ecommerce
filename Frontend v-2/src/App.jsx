@@ -7,6 +7,8 @@ import Home from './Home';
 import ProductDetail from './components/ProductDetail';
 import ProductList from './components/ProductList';
 import CategoriesList from './components/CategoriesList';
+import CategoryProducts from './components/CategoryProducts';
+import CartPage from './components/CartPage';
 function App() {
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,6 +52,8 @@ function App() {
         <Route path="/product-list" element={<ProductList />} />
         <Route path="/category-list" element={<CategoriesList />} />
         <Route path="/product/:id" element={<ProductDetail />} />
+        <Route path="/category/:categoryId" element={<CategoryProducts />} />
+        <Route path="/cart" element={<CartPage />} />
       </Routes>
     </Router>
   );
