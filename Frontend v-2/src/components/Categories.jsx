@@ -72,11 +72,11 @@ const Categories = () => {
           ))}
         </div>
         <div className="flex justify-center">
-            <button
+        <Link to={`/category-list`}
               className="text-center mt-10 cursor-pointer bg-primary text-white py-1 px-5 rounded-md"
             >
               View All
-            </button>
+              </Link>
           </div>
       </div>
     </div>

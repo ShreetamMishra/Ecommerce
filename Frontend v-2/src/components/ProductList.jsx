@@ -19,7 +19,7 @@ const ProductList = () => {
     price: '',
   });
 
-  // Fetch products and categories on component load
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {

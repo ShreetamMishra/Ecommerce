@@ -6,6 +6,7 @@ import Navbar from './Navbar';
 
 const CategoryProducts = () => {
   const { categoryId } = useParams();
+  console.log(categoryId);
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [userEmail, setUserEmail] = useState('');
