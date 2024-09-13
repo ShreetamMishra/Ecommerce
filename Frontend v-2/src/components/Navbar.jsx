@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom'; // import useLocation
 import logooo from "../assets/logooo.png";
 import { IoMdSearch } from "react-icons/io";
 import { FaShoppingCart } from "react-icons/fa";
@@ -8,18 +8,18 @@ import axios from 'axios';
 
 const Menu = [
   { id: 1, name: "Home", link: "/" },
-  { id: 2, name: "Top Rated", link: "/top-rated" },
-  { id: 3, name: "Kids Wear", link: "/kids-wear" },
-  { id: 4, name: "Mens Wear", link: "/mens-wear" },
-  { id: 5, name: "Electronics", link: "/electronics" },
+  { id: 2, name: "Kids Wear", link: "/" },
+  { id: 3, name: "Mens Wear", link: "/" },
+  { id: 4, name: "Women's wear", link: "/" },
 ];
 
 const Navbar = () => {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current path
   const [userEmail, setUserEmail] = useState('');
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [cartItems, setCartItems] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token] = useState(localStorage.getItem('token'));
   const [searchQuery, setSearchQuery] = useState('');
   const [products, setProducts] = useState([]); // To store all products
   const [filteredProducts, setFilteredProducts] = useState([]); // To store filtered products
@@ -154,7 +154,6 @@ const Navbar = () => {
             </button>
 
             {/* Darkmode */}
-            <DarkMode />
           </div>
         </div>
       </div>
@@ -191,7 +190,10 @@ const Navbar = () => {
             <>
               {Menu.map((data) => (
                 <li key={data.id}>
-                  <a href={data.link} className="inline-block px-4 hover:text-primary duration-200">
+                  <a
+                    href={data.link}
+                    className={`inline-block px-4 duration-200`}
+                  >
                     {data.name}
                   </a>
                 </li>
@@ -199,12 +201,18 @@ const Navbar = () => {
               {!isLoggedIn ? (
                 <>
                   <li>
-                    <button onClick={handleSignin} className="px-4 py-2 hover:text-primary duration-200">
+                    <button
+                      onClick={handleSignin}
+                      className={`px-4 py-2 hover:text-primary duration-200 ${location.pathname === "/signin" ? 'text-primary font-semibold' : ''}`}
+                    >
                       Signin
                     </button>
                   </li>
                   <li>
-                    <button onClick={handleSignup} className="inline-block px-4 hover:text-primary duration-200">
+                    <button
+                      onClick={handleSignup}
+                      className={`inline-block px-4 hover:text-primary duration-200 ${location.pathname === "/signup" ? 'text-primary font-semibold' : ''}`}
+                    >
                       Signup
                     </button>
                   </li>

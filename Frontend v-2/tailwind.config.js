@@ -34,8 +34,8 @@ export default {
         xs: "1000px",
       },
       colors: {
-        primary: "#f54143",
-        secondary:"#f41f27",
+        primary: "#79c01d",
+        secondary:"#528015",
       },
       container: {
         center: true,

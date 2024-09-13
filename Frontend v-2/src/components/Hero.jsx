@@ -1,7 +1,7 @@
 import React from "react";
-import Image1 from "../assets/Hero/Woman.png";
-import Image2 from "../assets/Hero/Shopping.png";
-import Image3 from "../assets/Hero/sale.png";
+import Image1 from "../assets/Hero/Hero1.png";
+import Image2 from "../assets/Hero/Hero2.png";
+import Image3 from "../assets/Hero/Hero3.png";
 import Slider from "react-slick";
 
 const ImageList = [
@@ -15,14 +15,14 @@ const ImageList = [
   {
     id: 2,
     img: Image2,
-    title: "30% off on all Men's Wear",
+    title: "Great discounts on Electronics",
     description:
       "Who's there lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
   {
     id: 3,
     img: Image3,
-    title: "70% off on all Products Sale",
+    title: "Mega sale offers available",
     description:
       "consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
   },
@@ -46,6 +46,7 @@ const Hero = ({ handleOrderPopup }) => {
     <div className="relative overflow-hidden min-h-[550px] sm:min-h-[650px] bg-gray-100 flex justify-center items-center dark:bg-gray-950 dark:text-white duration-200 ">
       {/* background pattern */}
       <div className="h-[700px] w-[700px] bg-primary/40 absolute -top-1/2 right-0 rounded-3xl rotate-45 -z[8]"></div>
+      <div className="h-[700px] w-[700px] bg-primary/40 absolute -bottom-1/2 left-0 rounded-3xl rotate-45 -z[8]"></div>
       {/* hero section */}
       <div className="container pb-8 sm:pb-0">
         <Slider {...settings}>

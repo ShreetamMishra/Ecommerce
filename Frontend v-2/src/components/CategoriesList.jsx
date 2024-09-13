@@ -111,7 +111,7 @@ const Categories = () => {
                 className="rounded-2xl bg-white dark:bg-gray-800 hover:bg-black/80 dark:hover:bg-primary hover:text-white relative shadow-xl duration-300 group w-[300px]"
               >
                 {/* image section */}
-                <div className="h-[100px]">
+                <div className="h-[150px]">
                   <img
                     src={category.imageUrl}
                     alt={category.categoryName}

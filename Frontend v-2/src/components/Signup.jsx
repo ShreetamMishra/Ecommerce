@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert';
 import Navbar from './Navbar';
-import signup from "../assets/signup.png"
+import signup from "../assets/Login.png"
 
 const Signup = () => {
   const [email, setEmail] = useState('');
